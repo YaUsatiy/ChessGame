@@ -17,7 +17,7 @@ public class Pawn extends Piece {
     private static final int[] CANDIDATE_MOVE_COORDINATES = { 7, 8, 9, 16 };
 
     public Pawn(int piecePosition, Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+        super(pieceType.PAWN, piecePosition, pieceAlliance);
     }
 
     @Override
@@ -69,8 +69,12 @@ public class Pawn extends Piece {
                 }
             }
         }
-
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset, final Alliance alliance) {

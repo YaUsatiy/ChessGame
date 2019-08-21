@@ -20,7 +20,7 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
     private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-8, -1, 1, 8};
 
     public Rook(int piecePosition, Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+        super(pieceType.ROOK    , piecePosition, pieceAlliance);
     }
 
     @Override
@@ -54,6 +54,11 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
         }
         return ImmutableList.copyOf(legalMoves);
     }
+
+     @Override
+     public String toString() {
+         return PieceType.ROOK.toString();
+     }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1);
