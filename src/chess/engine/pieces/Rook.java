@@ -19,7 +19,7 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
 
     private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-8, -1, 1, 8};
 
-    public Rook(int piecePosition, Alliance pieceAlliance) {
+    public Rook(final int piecePosition, final Alliance pieceAlliance) {
         super(pieceType.ROOK    , piecePosition, pieceAlliance);
     }
 
@@ -55,9 +55,14 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
         return ImmutableList.copyOf(legalMoves);
     }
 
+    @Override
+    public String toString() {
+     return PieceType.ROOK.toString();
+    }
+
      @Override
-     public String toString() {
-         return PieceType.ROOK.toString();
+     public Rook movePiece(final Move move) {
+         return new Rook(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
      }
 
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){

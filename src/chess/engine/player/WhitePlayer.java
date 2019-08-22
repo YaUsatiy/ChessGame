@@ -8,7 +8,7 @@ import chess.engine.pieces.Piece;
 import java.util.Collection;
 
 public class WhitePlayer extends Player {
-    public WhitePlayer(Board board, Collection<Move> whiteStandrardLegalMoves, Collection<Move> blackStandrardLegalMoves) {
+    public WhitePlayer(final Board board, final Collection<Move> whiteStandrardLegalMoves, final Collection<Move> blackStandrardLegalMoves) {
         super(board, whiteStandrardLegalMoves, blackStandrardLegalMoves);
     }
 

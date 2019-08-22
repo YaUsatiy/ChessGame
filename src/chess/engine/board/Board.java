@@ -6,6 +6,7 @@ import chess.engine.player.BlackPlayer;
 import chess.engine.player.Player;
 import chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 import java.util.*;
 
@@ -20,6 +21,7 @@ public class Board {
 
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
 
     private Board(Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -31,6 +33,7 @@ public class Board {
 
         this.whitePlayer = new WhitePlayer(this, whiteStandrardLegalMoves, blackStandrardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, whiteStandrardLegalMoves, blackStandrardLegalMoves);
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
 
     @Override
@@ -52,6 +55,10 @@ public class Board {
 
     public Player blackPlayer() {
         return this.blackPlayer;
+    }
+
+    public Player currentPlayer() {
+        return this.currentPlayer;
     }
 
     public Collection<Piece> getBlackPieces() {
@@ -130,10 +137,15 @@ public class Board {
         return gameBoard.get(titleCoordinate);
     }
 
+    public Iterable<Move> getAllLegalMoves() {
+        return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+    }
+
     public static class Builder {
 
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
+        Pawn enPassantPawn;
 
         public Builder() {
             boardConfig = new HashMap<>();
@@ -153,6 +165,9 @@ public class Board {
             return new Board(this);
         }
 
+        public void setEnPassantPawn(Pawn enPassantPawn) {
+            this.enPassantPawn = enPassantPawn;
+        }
     }
 
 }
