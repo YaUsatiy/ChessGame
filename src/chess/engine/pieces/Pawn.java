@@ -17,7 +17,7 @@ public class Pawn extends Piece {
     private static final int[] CANDIDATE_MOVE_COORDINATES = { 7, 8, 9, 16 };
 
     public Pawn(final int piecePosition, final Alliance pieceAlliance) {
-        super(pieceType.PAWN, piecePosition, pieceAlliance);
+        super(PieceType.PAWN, piecePosition, pieceAlliance);
     }
 
     @Override
@@ -36,8 +36,8 @@ public class Pawn extends Piece {
                 //TODO more work to do here
                 legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
             } else if ( currentCandidateOffset == 16 && this.isFirstMove() &&
-                    (SECOND_ROW[this.piecePosition] && this.getPieceAlliance().isBlack()) ||
-                    (SEVENTH_ROW[this.piecePosition] && this.getPieceAlliance().isWhite()) ){
+                    (SEVENTH_RANK[this.piecePosition] && this.getPieceAlliance().isBlack()) ||
+                    (SECOND_RANK[this.piecePosition] && this.getPieceAlliance().isWhite()) ){
                         final int behindCandidateDestinationCoordinate = this.piecePosition + (this.getPieceAlliance().getDirection() * 8);// я думаю *16
                         if (!board.getTile(behindCandidateDestinationCoordinate).isTileOccupied() &&
                         !board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
