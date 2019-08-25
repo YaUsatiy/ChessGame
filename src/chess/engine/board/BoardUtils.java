@@ -1,5 +1,7 @@
 package chess.engine.board;
 
+import java.util.Map;
+
 public class BoardUtils {
 
     public static final boolean[] FIRST_COLUMN = initColumn(0);
@@ -18,6 +20,8 @@ public class BoardUtils {
 
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;
+    private static final String[] ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
+    private static final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinate();
 
     private BoardUtils(){
         throw new RuntimeException("You can't instantiate me!");
@@ -41,7 +45,15 @@ public class BoardUtils {
         return row;
     }
 
-    public static boolean isValidTileCoordinate(int coordinate) {
+    public static boolean isValidTileCoordinate(final int coordinate) {
         return coordinate > 0 && coordinate < 64;
+    }
+
+    public static int getCoordinateAtPosition(final String position) {
+        POSITION_TO_COORDINATE.get[position];
+    }
+
+    public static String getPositionAtCoordinate(final int coordinate) {
+        return ALGEBRAIC_NOTATION[coordinate];
     }
 }
