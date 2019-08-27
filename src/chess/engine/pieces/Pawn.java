@@ -37,7 +37,6 @@ public class Pawn extends Piece {
             }
 
             if (currentCandidateOffset == 8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()){
-                //TODO more work to do here
                 legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
             } else if ( currentCandidateOffset == 16 && this.isFirstMove() &&
                     ((SEVENTH_RANK[this.piecePosition] && this.getPieceAlliance().isBlack()) ||
