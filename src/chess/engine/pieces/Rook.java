@@ -4,7 +4,7 @@ import chess.engine.Alliance;
 import chess.engine.board.Board;
 import chess.engine.board.BoardUtils;
 import chess.engine.board.Move;
-import chess.engine.board.Move.AttackMove;
+import chess.engine.board.Move.MajorAttackMove;
 import chess.engine.board.Move.MajorMove;
 import chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
@@ -48,7 +48,7 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                         final Alliance placeAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != placeAlliance) {
-                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         break;
                     }

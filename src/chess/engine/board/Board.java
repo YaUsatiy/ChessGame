@@ -22,6 +22,7 @@ public class Board {
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
 
     private Board(Builder builder) {
         this.gameBoard = createGameBoard(builder);
@@ -34,6 +35,7 @@ public class Board {
         this.whitePlayer = new WhitePlayer(this, whiteStandrardLegalMoves, blackStandrardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, whiteStandrardLegalMoves, blackStandrardLegalMoves);
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.enPassantPawn = builder.enPassantPawn;
     }
 
     @Override
@@ -139,6 +141,10 @@ public class Board {
 
     public Iterable<Move> getAllLegalMoves() {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+    }
+
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
     }
 
     public static class Builder {
