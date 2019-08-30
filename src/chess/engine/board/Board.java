@@ -73,6 +73,10 @@ public class Board {
         return whitePieces;
     }
 
+    public Piece getPiece(final int coordinate) {
+        return this.getTile(coordinate).getPiece();
+    }
+
     private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
 
         final List<Move> legalMoves = new ArrayList<>();

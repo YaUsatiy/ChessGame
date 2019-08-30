@@ -3,27 +3,21 @@ package chess.gui;
 import chess.engine.board.Board;
 import chess.engine.board.BoardUtils;
 import chess.engine.board.Move;
-import chess.engine.board.Tile;
 import chess.engine.pieces.Piece;
 import chess.engine.player.MoveTransition;
 import chess.engine.player.ai.MiniMax;
 import chess.engine.player.ai.MoveStrategy;
 import com.google.common.collect.Lists;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 import static javax.swing.JFrame.setDefaultLookAndFeelDecorated;
-import static javax.swing.SwingUtilities.isLeftMouseButton;
-import static javax.swing.SwingUtilities.isRightMouseButton;
+import static javax.swing.SwingUtilities.*;
 
 public class Table extends Observable {
 
@@ -38,8 +32,7 @@ public class Table extends Observable {
     private final MoveLog moveLog;
     private final GameSetup gameSetup;
     private Board chessBoard;
-    private Tile sourceTile;
-    private Tile destinationTile;
+    private Piece sourceTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private Move computerMove;
@@ -159,10 +152,14 @@ public class Table extends Observable {
     }
 
     public void show() {
-        Table.get().getMoveLog().clear();
-        Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
-        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
-        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+        invokeLater(new Runnable() {
+            public void run() {
+                Table.get().getMoveLog().clear();
+                Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
+                Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+                Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+            }
+        });
     }
 
     private static class TableGameAIWatcher implements Observer {
@@ -393,6 +390,10 @@ public class Table extends Observable {
             return this.moves.remove(move);
         }
 
+        public Move getLastMove() {
+            return this.moves.get(this.moves.size() - 1);
+        }
+
     }
 
     public enum PlayerType {
@@ -422,29 +423,31 @@ public class Table extends Observable {
             super(new GridBagLayout());
             this.tileId = tileId;
             setPreferredSize(TILE_PANEL_DIMENSION);
-            //highlightLegals(chessBoard);
             assignTileColor();
             assignTilePieceIcon(chessBoard);
-
+            highlightTileBorder(chessBoard);
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    if(Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().currentPlayer()) ||
+                            BoardUtils.isEndGame(Table.get().getGameBoard())) {
+                        return;
+                    }
+
                     if (isRightMouseButton(e)) {
                         sourceTile = null;
-                        destinationTile = null;
                         humanMovedPiece = null;
                     } else if (isLeftMouseButton(e)) {
                         if (sourceTile == null) {
                             //first click
-                            sourceTile = chessBoard.getTile(tileId);
-                            humanMovedPiece = sourceTile.getPiece();
+                            sourceTile = chessBoard.getPiece(tileId);
+                            humanMovedPiece = sourceTile;
                             if (humanMovedPiece == null) {
                                 sourceTile = null;
                             }
                         } else {
                             //second click
-                            destinationTile = chessBoard.getTile(tileId);
-                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getPiecePosition(), tileId);
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
@@ -452,7 +455,6 @@ public class Table extends Observable {
 
                             }
                             sourceTile = null;
-                            destinationTile = null;
                             humanMovedPiece = null;
                         }
                         SwingUtilities.invokeLater(new Runnable() {
@@ -486,7 +488,9 @@ public class Table extends Observable {
         public void drawTile(final Board board) {
             assignTileColor();
             assignTilePieceIcon(board);
+            highlightTileBorder(board);
             highlightLegals(board);
+            highlightLastMove();
             validate();
             repaint();
         }
@@ -502,6 +506,29 @@ public class Table extends Observable {
                         add(new JLabel(new ImageIcon(getClass().getResource("/misc/green_dot.png"))));
                     }
                 }
+            }
+        }
+
+        private void highlightLastMove() {
+            if (Table.get().getMoveLog().size() != 0) {
+                final Move lastMove = Table.get().getMoveLog().getLastMove();
+                if (lastMove != null) {
+                    if (this.tileId == lastMove.getCurrentCoordinate()) {
+                        setBackground(Color.pink);
+                    } else if (this.tileId == lastMove.getDestinationCoordinate()) {
+                        setBackground(Color.red);
+                    }
+                }
+            }
+        }
+
+        private void highlightTileBorder(final Board board) {
+            if(humanMovedPiece != null &&
+                    humanMovedPiece.getPieceAlliance() == board.currentPlayer().getAlliance() &&
+                    humanMovedPiece.getPiecePosition() == this.tileId) {
+                setBorder(BorderFactory.createLineBorder(Color.cyan));
+            } else {
+                setBorder(BorderFactory.createLineBorder(Color.GRAY));
             }
         }
 
