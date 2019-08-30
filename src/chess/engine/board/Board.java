@@ -9,6 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static chess.engine.board.BoardUtils.NUM_TILES;
 import static chess.engine.board.BoardUtils.NUM_TILES_PER_ROW;
@@ -141,6 +143,11 @@ public class Board {
 
     public Iterable<Move> getAllLegalMoves() {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+    }
+
+    public Collection<Piece> getAllPieces() {
+        return Stream.concat(this.whitePieces.stream(),
+                this.blackPieces.stream()).collect(Collectors.toList());
     }
 
     public Pawn getEnPassantPawn() {
