@@ -24,7 +24,7 @@ public class BoardUtils {
     public static final int NUM_TILES = 64;
     public static final int NUM_TILES_PER_ROW = 8;
     public static final List<String> ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
-    public final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
+    public static final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
 
     private BoardUtils(){
         throw new RuntimeException("You can't instantiate me!");
@@ -52,7 +52,7 @@ public class BoardUtils {
         return coordinate > 0 && coordinate < 64;
     }
 
-    public int getCoordinateAtPosition(final String position) {
+    public static int getCoordinateAtPosition(final String position) {
         return POSITION_TO_COORDINATE.get(position);
     }
 
@@ -60,7 +60,7 @@ public class BoardUtils {
         return ALGEBRAIC_NOTATION.get(coordinate);
     }
 
-    private Map<String, Integer> initializePositionToCoordinateMap() {
+    private static Map<String, Integer> initializePositionToCoordinateMap() {
         final Map<String, Integer> positionToCoordinate = new HashMap<>();
         for (int i = START_TILE_INDEX; i < NUM_TILES; i++) {
             positionToCoordinate.put(ALGEBRAIC_NOTATION.get(i), i);

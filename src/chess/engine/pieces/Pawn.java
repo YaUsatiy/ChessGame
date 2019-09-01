@@ -19,6 +19,10 @@ public class Pawn extends Piece {
 
     private static final int[] CANDIDATE_MOVE_COORDINATES = { 7, 8, 9, 16 };
 
+    public Pawn(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.PAWN, piecePosition, pieceAlliance, true);
+    }
+
     public Pawn(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.PAWN, piecePosition, pieceAlliance, true);
     }
@@ -54,7 +58,7 @@ public class Pawn extends Piece {
                             legalMoves.add(new Move.PawnJump(board, this, candidateDestinationCoordinate));
                         }
                     }
-            else if (currentCandidateOffset == 7 && //TODO: +/- decide with EnPassant
+            else if (currentCandidateOffset == 7 &&
                 !( (EIGHTH_COLUMN[this.piecePosition] && this.getPieceAlliance().isWhite()) ||
                    (FIRST_COLUMN[this.piecePosition] && this.getPieceAlliance().isBlack()))) {
                             if (board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
@@ -63,7 +67,7 @@ public class Pawn extends Piece {
                                     if (this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)) {
                                         legalMoves.add(new PawnPromotion(new PawnMove(board, this, candidateDestinationCoordinate)));
                                     } else {
-                                        legalMoves.add(new PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));//здесь AttackMove, на мой взгляд
+                                        legalMoves.add(new PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                                     }
                                 }
                             } else if (board.getEnPassantPawn() != null) {
@@ -84,7 +88,7 @@ public class Pawn extends Piece {
                         if (this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)) {
                             legalMoves.add(new PawnPromotion(new PawnMove(board, this, candidateDestinationCoordinate)));
                         } else {
-                            legalMoves.add(new PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));//здесь AttackMove, на мой взгляд
+                            legalMoves.add(new PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }
                 } else if (board.getEnPassantPawn() != null) {
@@ -108,17 +112,6 @@ public class Pawn extends Piece {
     @Override
     public Pawn movePiece(final Move move) {
         return new Pawn(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
-    }
-
-    private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset, final Alliance alliance) {
-        return (candidateOffset == 7 && (FIRST_COLUMN[currentPosition] && alliance.isBlack())) ||
-                (candidateOffset == 9 && FIRST_COLUMN[currentPosition] && alliance.isWhite());
-    }
-
-    private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset, final Alliance alliance){
-        return (candidateOffset == 7 && (EIGHTH_COLUMN[currentPosition] && alliance.isWhite())) ||
-                (candidateOffset == 9 && (EIGHTH_COLUMN[currentPosition] && alliance.isBlack()));
-
     }
 
     public Piece getPromotionPiece() {

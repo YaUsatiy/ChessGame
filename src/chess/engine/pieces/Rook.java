@@ -23,6 +23,10 @@ import static chess.engine.board.BoardUtils.isValidTileCoordinate;
         super(PieceType.ROOK, piecePosition, pieceAlliance, true);
     }
 
+     public Rook(final Alliance pieceAlliance, final int piecePosition) {
+         super(PieceType.ROOK, piecePosition, pieceAlliance, true);
+     }
+
      public Rook(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
          super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
      }

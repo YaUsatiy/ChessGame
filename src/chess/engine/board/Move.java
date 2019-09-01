@@ -288,7 +288,7 @@ public abstract class Move {
 
         @Override
         public String toString() {
-            return "";
+            return BoardUtils.getPositionAtCoordinate(this.destinationCoordinate) + "=Q";
         }
     }
 
